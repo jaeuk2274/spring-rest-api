@@ -30,12 +30,14 @@ public class EventController {
     @PostMapping
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors){ // id 가 들어있던 무시하고, dto에 있는 부분만 받아옴.
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
+            System.out.println(errors);
+            return ResponseEntity.badRequest().body(errors);
         }
 
         eventValidator.validate(eventDto, errors);
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
+            System.out.println(errors);
+            return ResponseEntity.badRequest().body(errors);
         }
 
 
