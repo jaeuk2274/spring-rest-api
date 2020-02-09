@@ -44,8 +44,7 @@ public class EventController {
         // eventDto 를 event로 옮겨주는 Model Mapper
         // 리플렉션을 사용해서 그냥 set/bulder 보다 속도가 느릴 순 있으나... 염려가 된다면..
         Event event = modelMapper.map(eventDto, Event.class);
-        System.out.println(event);
-
+        event.update();
         Event newEvent = this.eventRepository.save(event);
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
         return ResponseEntity.created(createdUri).body(event);
