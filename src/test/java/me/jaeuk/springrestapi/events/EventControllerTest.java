@@ -70,13 +70,36 @@ public class EventControllerTest {
                 .andExpect(jsonPath("id").value(Matchers.not(100)))
                 .andExpect(jsonPath("free").value(Matchers.not(true)))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()));
-
-        ;
-
-
-
-
     }
 
+
+    // 이런 방법도 있고, 무시하는 방법도 있다.(위의 경우)
+    @Test
+    public void createEvent_Bad_Request() throws Exception {
+        Event event = Event.builder()
+                .id(100)
+                .name("Spring")
+                .description("REST API Development practice")
+                .beginEventDateTime(LocalDateTime.of(2020, 2, 9, 12, 11, 9))
+                .closeEnrollmentDateTime(LocalDateTime.of(2020, 3 , 1, 12 , 10 , 8))
+                .beginEventDateTime(LocalDateTime.of(2020, 2, 10, 11, 30 ,0))
+                .basePrice(100)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("Startup Factory")
+                .free(true)
+                .offline(false)
+                .eventStatus(EventStatus.PUBLISHED)
+                .build();
+
+
+        mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaTypes.HAL_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(event)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                ;
+    }
 
 }
