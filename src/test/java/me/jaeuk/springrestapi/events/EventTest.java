@@ -54,6 +54,7 @@ class EventTest {
                 .build();
         //When
         event.update();
+        event.update();
 
         // Then
         assertThat(event.isFree()).isEqualTo(isFree);
