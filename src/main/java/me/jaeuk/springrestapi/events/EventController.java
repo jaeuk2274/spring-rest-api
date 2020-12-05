@@ -50,7 +50,7 @@ public class EventController {
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
         EventResource eventResource = new EventResource(event);
         eventResource.add(linkTo(EventController.class).withRel("query-events"));
-        eventResource.add(linkTo(EventController.class).slash(newEvent.getId()).withRel("update-events"));
+        eventResource.add(linkTo(EventController.class).slash(newEvent.getId()).withRel("update-event"));
         // EventResource 안으로 이동
         //eventResource.add(linkTo(EventController.class).slash(newEvent.getId()).withSelfRel());
 
