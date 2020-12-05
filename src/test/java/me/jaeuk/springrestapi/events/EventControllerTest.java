@@ -1,6 +1,7 @@
 package me.jaeuk.springrestapi.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jaeuk.springrestapi.common.TestDescription;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ public class EventControllerTest {
     @Autowired EventRepository eventRepository;
 
     @Test
-    @DisplayName("정상적으로 등록되는 테스트")
+    @TestDescription("정상적으로 등록되는 테스트")
     public void createEvent() throws Exception {
         EventDto eventDto = EventDto.builder()
                 .name("Spring")
@@ -53,7 +54,7 @@ public class EventControllerTest {
                 .limitOfEnrollment(100)
                 .build();
 
-        mockMvc.perform(post("/api/events")
+        mockMvc.perform(post("/events")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaTypes.HAL_JSON_VALUE)
                     .content(objectMapper.writeValueAsString(eventDto)))
@@ -68,7 +69,13 @@ public class EventControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonPath("id").value(Matchers.not(100)))
                 .andExpect(jsonPath("free").value(Matchers.not(true)))
-                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()));
+                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
+
+                .andExpect(jsonPath("_links.query-events").exists())
+                .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.update-events").exists())
+
+        ;
     }
 
 
@@ -93,7 +100,7 @@ public class EventControllerTest {
                 .eventStatus(EventStatus.PUBLISHED)
                 .build();
 
-        mockMvc.perform(post("/api/events")
+        mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(event)))
@@ -120,8 +127,9 @@ public class EventControllerTest {
                 .build();
 
 
-        this.mockMvc.perform(post("/api/events")
+        this.mockMvc.perform(post("/events")
                     .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaTypes.HAL_JSON)
                     .content(this.objectMapper.writeValueAsString(eventDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
