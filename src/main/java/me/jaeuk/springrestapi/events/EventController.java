@@ -2,6 +2,7 @@ package me.jaeuk.springrestapi.events;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -51,6 +52,7 @@ public class EventController {
         EventResource eventResource = new EventResource(event);
         eventResource.add(linkTo(EventController.class).withRel("query-events"));
         eventResource.add(linkTo(EventController.class).slash(newEvent.getId()).withRel("update-event"));
+        eventResource.add(new Link("docs/index.html#resources-index").withRel("profile"));
         // EventResource 안으로 이동
         //eventResource.add(linkTo(EventController.class).slash(newEvent.getId()).withSelfRel());
 
