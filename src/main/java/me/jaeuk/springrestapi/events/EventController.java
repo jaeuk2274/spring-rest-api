@@ -8,9 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -21,10 +18,9 @@ import java.net.URI;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
 @Controller
-@RequiredArgsConstructor
+@RequiredArgsConstructor // 생성자
 @RequestMapping(value = "/api/events", produces = MediaTypes.HAL_JSON_VALUE)
 public class EventController {
 

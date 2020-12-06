@@ -6,13 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.jaeuk.springrestapi.accounts.Account;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter @Setter @EqualsAndHashCode(of = "id") // 상호참조 문제. 다른 엔티티는 묶지 말것. (스택오버 플로우 발생 위험, 상호참조하며 계속 호출)
@@ -36,6 +33,8 @@ public class Event {
     private boolean free;
     @Enumerated(EnumType.STRING) // 나중에라도 순서 바뀔 수 있음.
     private EventStatus eventStatus = EventStatus.DRAFT;
+    @ManyToOne
+    private Account manager;
 
     public void update(){
         if(this.basePrice == 0 && this.maxPrice == 0) {
