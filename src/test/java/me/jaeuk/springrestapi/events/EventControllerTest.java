@@ -156,16 +156,16 @@ public class EventControllerTest extends BaseControllerTest {
     private String getAccessToken() throws Exception {
         // Given
         Account jaeuk = Account.builder()
-                .email(appProperties.getUserUsername())
-                .password(appProperties.getUserPassword())
+                .email(appProperties.getAdminUsername())
+                .password(appProperties.getAdminPassword())
                 .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
                 .build();
         this.accountService.saveAccount(jaeuk);
 
         ResultActions perform = this.mockMvc.perform(post("/oauth/token")
                 .with(httpBasic(appProperties.getCliendId(), appProperties.getClientSecret()))
-                .param("username", appProperties.getUserUsername())
-                .param("password", appProperties.getUserPassword())
+                .param("username", appProperties.getAdminUsername())
+                .param("password", appProperties.getAdminPassword())
                 .param("grant_type", "password"));
 
         var responseBody = perform.andReturn().getResponse().getContentAsString();
@@ -235,6 +235,32 @@ public class EventControllerTest extends BaseControllerTest {
                 // 에러시 최초화면, EventController에러를 던질때부터 index link 넣기
                 .andExpect(jsonPath("_links.index").exists())
                 ;
+    }
+
+    @Test
+    @DisplayName("인증 권한으로 create-event 링크 여부")
+    public void queryEventsWithAuthentication() throws Exception{
+        // Given
+        IntStream.range(0,30).forEach(this::generateEvent);
+
+        // When
+        ResultActions perform = this.mockMvc.perform(get("/api/events")
+                .header(HttpHeaders.AUTHORIZATION, getBearerToken())
+                .param("page", "1")
+                .param("size", "10")
+                .param("sort", "name,DESC")
+        );
+
+        // Then
+        perform.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("page").exists())
+                .andExpect(jsonPath("_embedded.eventList[0]._links.self").exists())
+                .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.profile").exists())
+                .andExpect(jsonPath("_links.create-event").exists())
+                .andDo(document("query-events"))
+        ;
     }
 
     @Test
