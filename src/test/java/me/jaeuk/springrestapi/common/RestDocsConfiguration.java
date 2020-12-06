@@ -11,7 +11,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 public class RestDocsConfiguration {
 
     @Bean
-    public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer(){
+    public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer() {
         return configurer -> configurer.operationPreprocessors()
                 .withRequestDefaults(prettyPrint())
                 .withResponseDefaults(prettyPrint());

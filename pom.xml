@@ -102,6 +102,14 @@
 			<version>1.1.0</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!-- 프리픽스 자동완성 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 	</dependencies>
 
 	<build>
