@@ -29,8 +29,8 @@ public class EventControllerTest extends BaseControllerTest {
     EventRepository eventRepository;
 
     @Test
-    @TestDescription("정상적으로 등록되는 테스트")
-    //@DisplayName
+    // @TestDescription("정상적으로 등록되는 테스트") 만들 수도 있다.
+    @DisplayName("정상적으로 등록되는 테스트")
     public void createEvent() throws Exception {
         EventDto eventDto = EventDto.builder()
                 .name("Spring")
@@ -263,7 +263,6 @@ public class EventControllerTest extends BaseControllerTest {
                     .andExpect(jsonPath("_links.profile").exists())
                     .andDo(document("update-an-event"))
                     // Spring rest docs 문서화 방법 createEvent() 참조
-
         ;
     }
     @Test

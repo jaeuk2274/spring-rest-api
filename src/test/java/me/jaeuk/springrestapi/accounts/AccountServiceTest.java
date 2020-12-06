@@ -1,5 +1,6 @@
 package me.jaeuk.springrestapi.accounts;
 
+import me.jaeuk.springrestapi.common.BaseControllerTest;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
@@ -10,18 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
-@SpringBootTest
-@ActiveProfiles("text")
-public class AccountServiceTest {
+public class AccountServiceTest extends BaseControllerTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -30,27 +29,28 @@ public class AccountServiceTest {
     AccountService accountService;
 
     @Autowired
-    AccountRepository accountRepository;
+    PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("스프링 시큐리티 학습테스트")
     public void findByUsername(){
         // Given
-        String password ="jaeuk";
-        String username ="jaeuk2274@gmail.com";
+        String password ="choi";
+        String username ="choi@gmail.com";
 
         Account account = Account.builder()
                     .email(username)
                     .password(password)
                     .roles(Set.of(AccountRole.ADMIN,AccountRole.USER))
                     .build();
-        this.accountRepository.save(account);
+        this.accountService.saveAccount(account);
         // When
         UserDetailsService userDetailsService = (UserDetailsService)accountService;
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         // Then
-        assertEquals(userDetails.getPassword(), password);
+        System.out.println("userDetails.getPassword() : " + userDetails.getPassword());
+        assertTrue(this.passwordEncoder.matches(password, userDetails.getPassword()));
     }
 
     @Test
@@ -73,8 +73,9 @@ public class AccountServiceTest {
         expectedException.expect(UsernameNotFoundException.class);
         expectedException.expectMessage(Matchers.containsString(username));
 
-        // When , 해당 예외가 발생하지 않으면 에러
-        accountService.loadUserByUsername(username);
+        // When, 해당 예외가 발생하지 않으면 에러
+        //accountService.loadUserByUsername(username);
     }
+
 
 }
