@@ -2,6 +2,7 @@ package me.jaeuk.springrestapi.index;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jaeuk.springrestapi.common.BaseControllerTest;
 import me.jaeuk.springrestapi.common.RestDocsConfiguration;
 import me.jaeuk.springrestapi.common.TestDescription;
 import org.hamcrest.Matchers;
@@ -36,15 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
-@ActiveProfiles("test")
-public class IndexControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+public class IndexControllerTest extends BaseControllerTest {
 
     @Test
     public void index() throws Exception{

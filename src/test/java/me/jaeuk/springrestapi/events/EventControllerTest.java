@@ -1,20 +1,14 @@
 package me.jaeuk.springrestapi.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jaeuk.springrestapi.common.BaseControllerTest;
 import me.jaeuk.springrestapi.common.RestDocsConfiguration;
 import me.jaeuk.springrestapi.common.TestDescription;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,25 +33,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
-@ActiveProfiles("test")
-public class EventControllerTest {
+public class EventControllerTest extends BaseControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired EventRepository eventRepository;
-    @Autowired ModelMapper modelMapper;
+    EventRepository eventRepository;
 
     @Test
     @TestDescription("정상적으로 등록되는 테스트")
+    //@DisplayName
     public void createEvent() throws Exception {
         EventDto eventDto = EventDto.builder()
                 .name("Spring")
@@ -289,6 +272,8 @@ public class EventControllerTest {
                     .andExpect(jsonPath("_links.self").exists())
                     .andExpect(jsonPath("_links.profile").exists())
                     .andDo(document("update-an-event"))
+                    // Spring rest docs 문서화 방법 createEvent() 참조
+
         ;
     }
     @Test
