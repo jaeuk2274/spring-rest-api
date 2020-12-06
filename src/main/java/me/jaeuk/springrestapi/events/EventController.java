@@ -1,6 +1,7 @@
 package me.jaeuk.springrestapi.events;
 
 import lombok.RequiredArgsConstructor;
+import me.jaeuk.springrestapi.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -33,13 +34,13 @@ public class EventController {
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors){ // id 가 들어있던 무시하고, dto에 있는 부분만 받아옴.
         if(errors.hasErrors()){
             System.out.println(errors);
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         eventValidator.validate(eventDto, errors);
         if(errors.hasErrors()){
             System.out.println(errors);
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         // eventDto 를 event로 옮겨주는 Model Mapper
@@ -58,5 +59,9 @@ public class EventController {
 
 
         return ResponseEntity.created(createdUri).body(eventResource);
+    }
+
+    private ResponseEntity badRequest(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 }
