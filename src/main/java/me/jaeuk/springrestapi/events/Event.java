@@ -1,5 +1,6 @@
 package me.jaeuk.springrestapi.events;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.jaeuk.springrestapi.accounts.Account;
+import me.jaeuk.springrestapi.accounts.AccountSerializer;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -34,6 +36,7 @@ public class Event {
     @Enumerated(EnumType.STRING) // 나중에라도 순서 바뀔 수 있음.
     private EventStatus eventStatus = EventStatus.DRAFT;
     @ManyToOne
+    @JsonSerialize(using = AccountSerializer.class) // event의 serialize 할 때는 구체적인 정보가 필요없기 때문에
     private Account manager;
 
     public void update(){
