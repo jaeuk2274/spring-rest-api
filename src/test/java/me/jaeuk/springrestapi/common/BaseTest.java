@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(RestDocsConfiguration.class)
 @ActiveProfiles("test")
 @Ignore // 테스트를 가지고 있는 클래스가 아니기 때문에, 테스트를 실행하는 클래스로 간주되지 않기 위해 무시.
-public class BaseControllerTest {
+public class BaseTest {
 
     @Autowired
     protected MockMvc mockMvc;

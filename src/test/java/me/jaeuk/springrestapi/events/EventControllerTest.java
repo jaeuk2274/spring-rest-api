@@ -5,10 +5,8 @@ import me.jaeuk.springrestapi.accounts.AccountRepository;
 import me.jaeuk.springrestapi.accounts.AccountRole;
 import me.jaeuk.springrestapi.accounts.AccountService;
 import me.jaeuk.springrestapi.common.AppProperties;
-import me.jaeuk.springrestapi.common.BaseControllerTest;
+import me.jaeuk.springrestapi.common.BaseTest;
 import org.hamcrest.Matchers;
-import org.jboss.logging.Logger;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class EventControllerTest extends BaseControllerTest {
+public class EventControllerTest extends BaseTest {
 
     @Autowired
     EventRepository eventRepository;

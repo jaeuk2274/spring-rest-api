@@ -1,17 +1,11 @@
 package me.jaeuk.springrestapi.configs;
 
-import me.jaeuk.springrestapi.accounts.Account;
-import me.jaeuk.springrestapi.accounts.AccountRepository;
-import me.jaeuk.springrestapi.accounts.AccountRole;
 import me.jaeuk.springrestapi.accounts.AccountService;
 import me.jaeuk.springrestapi.common.AppProperties;
-import me.jaeuk.springrestapi.common.BaseControllerTest;
-import org.junit.jupiter.api.BeforeEach;
+import me.jaeuk.springrestapi.common.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Set;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthServerConfigTest extends BaseControllerTest {
+class AuthServerConfigTest extends BaseTest {
 
     @Autowired
     AccountService accountService;

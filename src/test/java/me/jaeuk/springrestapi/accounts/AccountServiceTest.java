@@ -1,18 +1,16 @@
 package me.jaeuk.springrestapi.accounts;
 
-import me.jaeuk.springrestapi.common.BaseControllerTest;
+import me.jaeuk.springrestapi.common.BaseTest;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Set;
 
@@ -20,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.*;
 
 
-public class AccountServiceTest extends BaseControllerTest {
+public class AccountServiceTest extends BaseTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
