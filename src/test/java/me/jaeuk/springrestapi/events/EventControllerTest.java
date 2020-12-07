@@ -149,18 +149,18 @@ public class EventControllerTest extends BaseControllerTest {
         ;
     }
 
+    private String getBearerToken(Boolean needToCreateAccount) throws Exception {
+        return "Bearer " + getAccessToken(needToCreateAccount);
+    }
     private String getBearerToken() throws Exception {
-        return "Bearer " + getAccessToken();
+        return getBearerToken(true);
     }
 
-    private String getAccessToken() throws Exception {
+    private String getAccessToken(Boolean needToCreateAccount) throws Exception {
         // Given
-        Account jaeuk = Account.builder()
-                .email(appProperties.getAdminUsername())
-                .password(appProperties.getAdminPassword())
-                .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
-                .build();
-        this.accountService.saveAccount(jaeuk);
+        if(needToCreateAccount){
+            createAccount();
+        }
 
         ResultActions perform = this.mockMvc.perform(post("/oauth/token")
                 .with(httpBasic(appProperties.getCliendId(), appProperties.getClientSecret()))
@@ -171,7 +171,18 @@ public class EventControllerTest extends BaseControllerTest {
         var responseBody = perform.andReturn().getResponse().getContentAsString();
         Jackson2JsonParser parser = new Jackson2JsonParser();
         return parser.parseMap(responseBody).get("access_token").toString();
-    };
+    }
+
+    private Account createAccount() {
+        Account jaeuk = Account.builder()
+                .email(appProperties.getAdminUsername())
+                .password(appProperties.getAdminPassword())
+                .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
+                .build();
+        return this.accountService.saveAccount(jaeuk);
+    }
+
+    ;
 
     // 이런 방법도 있고, 무시하는 방법도 있다.(위의 경우)
     @Test
@@ -300,7 +311,8 @@ public class EventControllerTest extends BaseControllerTest {
     @DisplayName("기존의 이벤트를 하나 조회하기")
     public void getEvent() throws Exception{
         // Given
-        Event event = this.generateEvent(100);
+        Account account = this.createAccount();
+        Event event = this.generateEvent(100, account);
 
         // When & Then
         this.mockMvc.perform(get("/api/events/{id}", event.getId()))
@@ -325,14 +337,15 @@ public class EventControllerTest extends BaseControllerTest {
     @DisplayName("이벤트를 정상적으로 수정한 경우")
     public void updateEvent() throws Exception {
         // Given
-        Event event = generateEvent(200);
+        Account account = this.createAccount();
+        Event event = generateEvent(200, account);
         EventDto eventDto = this.modelMapper.map(event, EventDto.class);
         String updateName = "Updated Event";
         eventDto.setName(updateName);
 
         // When & Then
         this.mockMvc.perform(put("/api/events/{id}", event.getId())
-                        .header(HttpHeaders.AUTHORIZATION, getBearerToken())
+                        .header(HttpHeaders.AUTHORIZATION, getBearerToken(false))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(eventDto)))
                     .andDo(print())
@@ -394,24 +407,33 @@ public class EventControllerTest extends BaseControllerTest {
         ;
     }
 
-    private Event generateEvent(int i) {
-        Event event = Event.builder()
-                .name("evemt " + i)
-                .description("test event" +i)
-                .beginEnrollmentDateTime(LocalDateTime.of(2020, 2, 9, 12, 11, 9))
-                .closeEnrollmentDateTime(LocalDateTime.of(2020, 3 , 1, 12 , 10 , 8))
-                .beginEventDateTime(LocalDateTime.of(2020, 2, 10, 11, 30 ,0))
-                .endEventDateTime(LocalDateTime.of(2020, 4, 10, 11, 30 ,0))
-                .location("Startup Factory")
-                .basePrice(100)
-                .maxPrice(200)
-                .limitOfEnrollment(100)
-                .free(false)
-                .offline(true)
-                .eventStatus(EventStatus.DRAFT)
-                .build();
-
+    private Event generateEvent(int i, Account account) {
+        Event event = buildEvent(i);
+        event.setManager(account);
         return this.eventRepository.save(event);
+    }
+
+    private Event generateEvent(int i) {
+        Event event = buildEvent(i);
+        return this.eventRepository.save(event);
+    }
+
+    private Event buildEvent(int i) {
+        return Event.builder()
+                    .name("evemt " + i)
+                    .description("test event" + i)
+                    .beginEnrollmentDateTime(LocalDateTime.of(2020, 2, 9, 12, 11, 9))
+                    .closeEnrollmentDateTime(LocalDateTime.of(2020, 3 , 1, 12 , 10 , 8))
+                    .beginEventDateTime(LocalDateTime.of(2020, 2, 10, 11, 30 ,0))
+                    .endEventDateTime(LocalDateTime.of(2020, 4, 10, 11, 30 ,0))
+                    .location("Startup Factory")
+                    .basePrice(100)
+                    .maxPrice(200)
+                    .limitOfEnrollment(100)
+                    .free(false)
+                    .offline(true)
+                    .eventStatus(EventStatus.DRAFT)
+                    .build();
     }
 
 
